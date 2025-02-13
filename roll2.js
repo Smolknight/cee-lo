@@ -3,12 +3,10 @@ let players={
     bot:{
         points:1000,
         turn:true,
-        setPoint:0
     },
     player:{
         points:1000,
         turn:false,
-        setPoint:0
     }
 }
 
@@ -19,24 +17,29 @@ let dice={
 }
 
 let game={
+    time:{
+        minutes:0,
+        seconds:0
+    },
     pot:0,
     setPoint:0
 }
 roll()
-
 //this function rolls the dice and starts the game
 function roll(){
+    //segment 1: roll
     dice.d1=Math.floor(1+Math.random()*6)
     dice.d2=Math.floor(1+Math.random()*6)
     dice.d3=Math.floor(1+Math.random()*6)
-
+    //end of segment 1
+    
     //varible used as object shortcut, makes code more readable
     player= players.player
     bot= players.bot
     pot= game.pot
 
-    switch(instants()){
 //code below only really works for instant win and lose conditions
+    switch(instants()){
         case 'win':
             if(bot.turn){
                 //awards points to the bot
