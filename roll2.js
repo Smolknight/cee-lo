@@ -19,7 +19,8 @@ let dice={
 }
 
 let game={
-    pot:0
+    pot:0,
+    setPoint:0
 }
 roll()
 
@@ -29,9 +30,50 @@ function roll(){
     dice.d2=Math.floor(1+Math.random()*6)
     dice.d3=Math.floor(1+Math.random()*6)
 
-    instants()
-}
+    //varible used as object shortcut, makes code more readable
+    player= players.player
+    bot= players.bot
+    pot= game.pot
 
+    switch(instants()){
+//code below only really works for instant win and lose conditions
+        case 'win':
+            if(bot.turn){
+                //awards points to the bot
+                bot.points=pot
+                pot=0
+                bot.turn=false
+                player.turn=true
+            }
+            else{
+                //awards points to the player
+                player.points=pot
+                pot=0
+                player.turn=false
+                bot.turn=true
+            }
+            break
+
+        case 'lose':
+            //checks if it is the bot's turn
+            if(bot.turn){
+                //awards points to other player
+                player.points=game.pot
+                game.pot=0
+                players.bot.turn=false
+                players.player.turn=true
+            } else{
+                players.bot.points=game.pot
+                game.pot=0
+                players.bot.turn=true
+                players.player.turn=false
+            }
+            break
+} //end of switch case
+
+console.log("player turn "+player.turn)
+console.log("bot turn "+bot.turn)
+}
 
 function instants(){
     let roll=Object.values(dice)
@@ -39,11 +81,10 @@ function instants(){
 
     //a 4-5-6 is an instant win condition
         if(roll.includes(4) && roll.includes(5) && roll.includes(6)){
-            console.log('insta win')
-        }
-        else{
-            console.log('no')
+            return 'win'
         }
 
-        if(roll.includes(1) && roll.includes(2) && roll.includes()) 
+        if(roll.includes(1) && roll.includes(2) && roll.includes(3)){
+            return 'lose'
+        }
 }
