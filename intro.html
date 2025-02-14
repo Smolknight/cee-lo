@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cee-lo</title>
+    <style>
+        body{
+            background-color: black;
+            color: white;
+        }
+        #contian{
+            width: 100%;
+            height: 95vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        #title{
+            grid-column: 2;
+            display: flex;
+            justify-content: center;
+            flex-direction: column; 
+
+            h1{
+                font-size: 5em;
+                height: auto;
+            }
+
+            h1:hover{
+                transform: translateY(-30px);
+                transition: 0.5s;
+            }
+        }
+        #title h1{
+                font-size: 5em;
+                height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="contian">
+
+        <div id="title">
+            <h1>CEE-LO</h1>
+            <button style="height: fit-content; width: 50%;" >Play</button>
+        </div>
+
+    </div>
+</body>
+</html>
