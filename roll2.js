@@ -1,12 +1,16 @@
 let players={
-
+    
     bot:{
         points:1000,
         turn:true,
+        setPoint:0,
+        triple:0
     },
     player:{
         points:1000,
         turn:false,
+        setPoint:0,
+        triple:0
     }
 }
 
@@ -18,19 +22,29 @@ let dice={
 
 let game={
     time:{
-        minutes:0,
-        seconds:0
+        minutes:4,
+        seconds:59
     },
     pot:0,
-    setPoint:0
 }
-roll()
+roll()  
+
+
+//starts the timer
+timeVar=setInterval(timer,1000)
+
+
 //this function rolls the dice and starts the game
 function roll(){
+
+    let displayDice=document.getElementById('dice')
+    
     //segment 1: roll
     dice.d1=Math.floor(1+Math.random()*6)
     dice.d2=Math.floor(1+Math.random()*6)
     dice.d3=Math.floor(1+Math.random()*6)
+
+    displayDice.innerHTML= `${dice.d1} ${dice.d2} ${dice.d3}`
     //end of segment 1
     
     //varible used as object shortcut, makes code more readable
@@ -74,8 +88,6 @@ function roll(){
             break
 } //end of switch case
 
-console.log("player turn "+player.turn)
-console.log("bot turn "+bot.turn)
 }
 
 function instants(){
@@ -90,4 +102,29 @@ function instants(){
         if(roll.includes(1) && roll.includes(2) && roll.includes(3)){
             return 'lose'
         }
+}
+
+
+//controls the timer
+function timer(){
+    let timeDisplay=document.getElementById('timer')
+
+    
+
+    timeDisplay.innerHTML=`<h1>${game.time.minutes}:${game.time.seconds}</h1>`
+    game.time.seconds-=1
+
+    
+    if(game.time.seconds<10){
+        timeDisplay.innerHTML=`<h1>${game.time.minutes}:0${game.time.seconds}</h1>`
+    }
+
+    if(game.time.minutes>0 && game.time.seconds==0){
+        game.time.minutes-=1
+        game.time.seconds+=59
+        
+    }
+    if(game.time.minutes==0 && game.time.seconds==0){
+        clearInterval(timeVar)
+    }
 }

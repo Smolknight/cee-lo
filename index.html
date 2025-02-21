@@ -3,61 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>cee-lo</title>
     <style>
         body{
-            margin: 0;
-        }
-        .container{
-            background-color: black ;
-            height: 100vh;
-            display: grid;
-            grid-template-rows: 1fr 1fr 1fr;
+            background-color: black;
             color: white;
+            overflow-y: hidden;
         }
-        #row2{
+        a:link{
+            text-decoration: none;
+        }
+        a:visited{
+            color: black;
+        }
+        button{
+            height: 7vh; 
+            width: 60%; 
+            font-size: 2em;
+        }
+        #contian{
             width: 100%;
-            grid-row: 2;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+            height: 95vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
         }
-        #dice{
-            text-align: center;
-            height: 50%;
+        #title{
+            grid-column: 2;
             display: flex;
+            justify-content: space-evenly;
             align-items: center;
-            font-size: 2rem;
+            flex-direction: column; 
+
+
         }
-        .rollResult{
-            height: 50%;
-            width: 100%;
-            display: flex;
+        #title h1{
+                font-size: 5em;
+                height: auto;
+                animation-name: fadeIn;
+                animation-duration: 2s;
+        }
+        h2{
+            animation-name: fadeIn;
+            animation-duration: 2s;
+        }
+        button{
+            animation-name: slideUp;
+            animation-duration: 6s;
+            transition: 0.3s;
+        }
+
+        button:hover{
+            transform: scale(1.2);
+        }
+
+        @keyframes fadeIn{
+            from{
+                opacity: 0;
+            }
+            to{
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from{
+                transform: translateY(500px);
+            }
+            to{
+                transform: translateY(-1%);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <button id="run" onclick="checkVal()">Run</button>
-        <div id="row2">
+    <div id="contian">
 
-            <div id="dice">
+        <div id="title">
+            <div class="text">
+                <h1>CEE-LO</h1>
+                <h2 style="text-align: center;">non-banking edition</h2>
             </div>
 
-            <div class="rollResult">
-
-                <div id="pot">
-                    
-                </div>
-                
-            </div>
-
+            <button onclick="play()">Play</button>
+            <a href="https://www.netexl.com/howtoplay/cee-lo/" target="_blank"><button>How to play</a></button>
         </div>
 
-    </div>    
-
+    </div>
 </body>
-</html> 
-<script src="roll.js"></script>
+</html>
+
+<script>
+    function play(){
+        console.log('click')
+        window.location.href='game.html'
+    }
+</script>
