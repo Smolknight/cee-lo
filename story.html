@@ -25,19 +25,20 @@
 
         #fader{
             animation-name: fader;
-            animation-duration: 0.9s;
+            animation-duration: 1s;
             animation-iteration-count: infinite;
+            animation-delay: 2150ms;
         }
 
         @keyframes fader{
             0%{
-                opacity: 0.5;
-            }
-            50%{
                 opacity: 1;
             }
-            100%{
+            50%{
                 opacity: 0.5;
+            }
+            100%{
+                opacity: 1;
             }
         }
     </style>
@@ -45,14 +46,32 @@
 <body>
     <div class="dialog">
         <div class="text">
-            <p id="story">enindinini<span id="fader">_</span></p>
+            <p id="story"><span id="insertHere"></span><span id="fader">_</span></p>
         </div>
     </div>
 </body>
 </html>
 <script>
-    const storyText1=document.getElementById('story')
-    let storyArray=storyText1.textContent.split('')
-    storyArray.pop()
-    console.log(storyArray)
+
+
+        const story=document.getElementById('insertHere')
+    const storyText1='sjrgb bjrewnfmgore biewnjnbugvbn uhb ihb ji'
+    let storyArray=storyText1.split("") 
+    console.log(story)
+    let i=0
+
+    lol=setInterval(typer,50)
+
+function typer(){
+    story.innerHTML+=`${storyArray[i]}`
+    i++
+    console.log(i)
+    if(i==storyArray.length || i>storyArray.length){
+        clearInterval(lol)
+    }
+}
+
+
+
+
 </script>
