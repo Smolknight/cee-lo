@@ -27,6 +27,10 @@ let game={
     },
     pot:0,
 }
+//varibles used to shorten object paths
+player= players.player
+bot= players.bot
+
 roll()  
 
 
@@ -44,86 +48,151 @@ function roll(){
     dice.d2=Math.floor(1+Math.random()*6)
     dice.d3=Math.floor(1+Math.random()*6)
 
-    displayDice.innerHTML= `${dice.d1} ${dice.d2} ${dice.d3}`
+    displayDice.textContent= `${dice.d1} ${dice.d2} ${dice.d3}`
     //end of segment 1
     
-    //varible used as object shortcut, makes code more readable
-    player= players.player
-    bot= players.bot
-    pot= game.pot
+    //checks for the instant win and instant lost
+    instants()
+    //runs the function that checks if any player gotten a triple
+    triple()
 
-//code below only really works for instant win and lose conditions
-    switch(instants()){
+    //runs the function that checks for set point values
+    setPointCheck()
+
+    //turn checker
+    if(bot.turn){
+        player.turn=true
+        bot.turn=false
+    }else{
+        bot.turn=true
+        player.turn=false
+    }
+}//end of roll function
+
+function instants(){
+    let roll=Object.values(dice)
+    console.log(roll)
+    let outcome=''
+    //a 4-5-6 is an instant win condition
+        if(roll.includes(4) && roll.includes(5) && roll.includes(6)){
+            outcome='win'
+        }
+
+        if(roll.includes(1) && roll.includes(2) && roll.includes(3)){
+            outcome='lose'
+        }
+
+//checks who won or lost
+            switch(outcome){
         case 'win':
             if(bot.turn){
                 //awards points to the bot
-                bot.points=pot
-                pot=0
-                bot.turn=false
-                player.turn=true
+                bot.points+=game.pot
+                game.pot=0
+                break
             }
             else{
                 //awards points to the player
-                player.points=pot
-                pot=0
-                player.turn=false
-                bot.turn=true
+                player.points+=game.pot
+                game.pot=0
+                break
             }
-            break
+
 
         case 'lose':
             //checks if it is the bot's turn
             if(bot.turn){
                 //awards points to other player
-                player.points=game.pot
+                player.points+=game.pot
                 game.pot=0
-                players.bot.turn=false
-                players.player.turn=true
+                break
             } else{
-                players.bot.points=game.pot
+                bot.points+=game.pot
                 game.pot=0
-                players.bot.turn=true
-                players.player.turn=false
-            }
-            break
-} //end of switch case
-
+                break
+}
+}//end of switch case
 }
 
-function instants(){
+//checks for a triple
+function triple(){
+
+    if(dice.d1==dice.d2===dice.d3){
+        if(bot.turn){
+            bot.triple=dice.d1+dice.d2+dice.d3
+        }
+        else{
+            player.triple=dice.d1+dice.d2+dice.d3
+        }
+    }else{
+        return false
+    }
+
+    //checks if both players even have a triple
+    if(bot.triple>0 && player.triple>0){
+           //if both players gotten a triple, this if statement checks who has the larger value
+    if(bot.triple>player.triple){
+        bot.points+=game.pot
+        game.pot=0
+    }else{
+        player.points+=game.pot
+        game.pot=0
+    }
+    }else{
+        return false
+    }//end of if statement
+}//end of triple() function
+
+
+//checks for set point values
+function setPointCheck(){
+    //converts the values in dice into an array
     let roll=Object.values(dice)
-    console.log(roll)
+    let setPoint=roll.filter((value) => roll.indexOf(value) === roll.lastIndexOf(value));
 
-    //a 4-5-6 is an instant win condition
-        if(roll.includes(4) && roll.includes(5) && roll.includes(6)){
-            return 'win'
+    //checks if there even is a setpoint
+    if(setPoint>0){
+
+        //checks who gets the set point
+        if(bot.turn){
+            bot.setPoint=setPoint
+        }else{
+            player.setPoint=setPoint
         }
 
-        if(roll.includes(1) && roll.includes(2) && roll.includes(3)){
-            return 'lose'
+        //checks if both players even have a set point
+        if(bot.setPoint>0 && player.setPoint>0){
+            //checks who has the larger setPoint
+            if(bot.setPoint>player.setPoint){
+                bot.points+=game.pot
+                game.pot=0
+            }else{
+                player.points+=game.pot
+                game.pot=0
+            }
         }
-}
-
+    }
+}//end of setPointCheck function
 
 //controls the timer
 function timer(){
-    let timeDisplay=document.getElementById('timer')
-
-    
-
-    timeDisplay.innerHTML=`<h1>${game.time.minutes}:${game.time.seconds}</h1>`
+    let timeDisplay=document.getElementById('timeDisplay')
+    //updates the time display
+    timeDisplay.textContent=`${game.time.minutes}:${game.time.seconds}`
     game.time.seconds-=1
 
-    
+    //adds a 0 when seconds is less than 10. If second is 1 then displays it as 01
     if(game.time.seconds<10){
-        timeDisplay.innerHTML=`<h1>${game.time.minutes}:0${game.time.seconds}</h1>`
+        timeDisplay.textContent=`${game.time.minutes}:0${game.time.seconds}`
     }
 
+    //updates the minutes once a minute passes
     if(game.time.minutes>0 && game.time.seconds==0){
         game.time.minutes-=1
         game.time.seconds+=59
         
     }
+    //clears the timer when it reaches zero
     if(game.time.minutes==0 && game.time.seconds==0){
         clearInterval(timeVar)
     }
