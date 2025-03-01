@@ -11,23 +11,22 @@
         }
         .dialog{
             width: 100%;
-            height: 50vh;
+            height: 95vh;
             display: flex;
-            align-content: center;
-            justify-content: center;
+            align-items: center;
         }
-        .text{
-            width: 90%;
-            border: 9px gray solid;
-            text-indent: 10px;
-            font-size: 1.4em;
+
+        #story{
+            height: 5vh;
+            margin: 0 auto;
+            font-size: 2em;
+            width: auto;
         }
 
         #fader{
             animation-name: fader;
             animation-duration: 1s;
             animation-iteration-count: infinite;
-            animation-delay: 2150ms;
         }
 
         @keyframes fader{
@@ -45,30 +44,98 @@
 </head>
 <body>
     <div class="dialog">
-        <div class="text">
+        
             <p id="story"><span id="insertHere"></span><span id="fader">_</span></p>
-        </div>
+
     </div>
 </body>
 </html>
+
+
 <script>
-
-
+    //used to check which lines have been displayed
+const flag={
+    fristLine:false,
+    secondLine:false,
+    thirdLine:false,
+    eraseFlag:0
+}
+//stores the text that needs to be displayed
+const storyChange={
+    //first line to be displayed
+    text:`It's the year 20XX, you recently been layed off from your corporate job`
+}
+    //grabs where text is to be displayed
         const story=document.getElementById('insertHere')
-    const storyText1='sjrgb bjrewnfmgore biewnjnbugvbn uhb ihb ji'
-    let storyArray=storyText1.split("") 
-    console.log(story)
-    let i=0
 
-    lol=setInterval(typer,50)
+//starts i at 0
+    let i=0
+    //interval that calls typer() every 50ms, starts the first cycle
+    lol=setInterval(typer,45)
 
 function typer(){
+    //grabs the current line
+    let storyText=storyChange.text
+
+    //checks if the first line has been displayed
+    if(flag.fristLine){
+        //changes the text to the second line
+        storyText=`rent is two weeks away`
+        flag.eraseFlag+=1
+    }
+    //checks if the second line has been displayed
+    if(flag.secondLine){
+        //changes the text to the third line
+        storyText=`Since you can't get a job and get payed soon enough`
+    }
+
+    //breaks up the text and inserts the characters into an array
+    let storyArray=storyText.split("") 
+
+    //displays the current character
+    //i is used to cycle through every character
     story.innerHTML+=`${storyArray[i]}`
+    //tells the program to move to the next letter
     i++
     console.log(i)
-    if(i==storyArray.length || i>storyArray.length){
+    //once the entire line is displayed, tells the program to stop writing
+    if(i==storyArray.length){
         clearInterval(lol)
+
+    //gives the player time to read the text before it is erased, erases after 3s
+        setTimeout(function(){
+            erase=setInterval(eraser,30)
+        },3000)
     }
+}
+
+
+
+function eraser(){
+    //grabs the current text displayed
+    let story=document.getElementById('insertHere')
+    //stores the text in a new variable
+    let newText=story.textContent
+    //every cycle it removes one character from the end of the line
+    let finalText=newText.substr(0,i-1)
+    //displays the modified text, creating an erasing effect
+    story.textContent=finalText
+    //i is used to keep track of remaning characters
+    i--
+
+    //once there are no more characters to erase, it stops the eraser()
+    if(i==0){
+        clearInterval(erase)
+        //for first run through, it checks off the flag that tells the program that the first line been displayed
+        flag.fristLine=true
+
+        if(flag.eraseFlag==1){
+            //restarts the entire typing cycle, the next cycle with display the second line
+            flag.secondLine=true
+            lol=setInterval(typer,45)
+        }
+    }
+
 }
 
 
