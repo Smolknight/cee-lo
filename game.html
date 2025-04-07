@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cee-lo</title>
+
+    <style>
+    body{
+        background-color: black;
+        color: white;
+        overflow-y:hidden;
+        margin: 0;
+    }
+    .contain{
+        width: 100%;
+        height: 100vh;
+        display: grid;
+        grid-template-rows: 1fr 1fr 1fr;
+    }
+    .dice{
+        grid-row: 2;
+        text-align: center;
+        align-content: center;
+    }
+    .time{
+        text-align: center;
+        font-size: 1.2em;
+    }
+    #dice{
+    font-size: 3em;
+    margin: 0;
+    }
+    </style>
+</head>
+<body>
+    <div class="contain">
+        <div class="time">
+
+            <p id="timer">
+                <h1 id="timeDisplay">5:00</h1>
+            </p>
+
+        </div>
+        <div class="dice">
+                <p id="dice"></p>    
+        </div>
+    </div>
+</body>
+</html>
+<script defer src="roll2.js"></script>

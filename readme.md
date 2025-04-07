@@ -34,10 +34,6 @@ this subobject stores the remaining time. This game would go on forever without 
 ## pot
 this stores how much money there is in the pot
 
-## setpoint
-this stores set point and triple value
-got lazy and this saves the amount of variables needed
-
 ---
 
 ## function roll

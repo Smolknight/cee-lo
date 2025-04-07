@@ -2,13 +2,13 @@ let players={
     
     bot:{
         points:1000,
-        turn:true,
+        turn:false,
         setPoint:0,
         triple:0
     },
     player:{
         points:1000,
-        turn:false,
+        turn:true,
         setPoint:0,
         triple:0
     }
@@ -35,39 +35,36 @@ roll()
 
 
 //starts the timer
-timeVar=setInterval(timer,1000)
+// timeVar=setInterval(timer,1000)
 
 
 //this function rolls the dice and starts the game
 function roll(){
 
-    let displayDice=document.getElementById('dice')
+    // let displayDice=document.getElementById('dice')
     
     //segment 1: roll
     dice.d1=Math.floor(1+Math.random()*6)
     dice.d2=Math.floor(1+Math.random()*6)
     dice.d3=Math.floor(1+Math.random()*6)
 
-    displayDice.textContent= `${dice.d1} ${dice.d2} ${dice.d3}`
+    // displayDice.textContent= `${dice.d1} ${dice.d2} ${dice.d3}`
     //end of segment 1
     
     //checks for the instant win and instant lost
     instants()
+
     //runs the function that checks if any player gotten a triple
     triple()
 
     //runs the function that checks for set point values
     setPointCheck()
 
-    //turn checker
-    if(bot.turn){
-        player.turn=true
-        bot.turn=false
-    }else{
-        bot.turn=true
-        player.turn=false
-    }
+   //calls the function that changes who turn it is
+    turnSwitch()
 }//end of roll function
+
+
 
 function instants(){
     let roll=Object.values(dice)
@@ -76,10 +73,10 @@ function instants(){
     //a 4-5-6 is an instant win condition
         if(roll.includes(4) && roll.includes(5) && roll.includes(6)){
             outcome='win'
-        }
-
-        if(roll.includes(1) && roll.includes(2) && roll.includes(3)){
+        }else if(roll.includes(1) && roll.includes(2) && roll.includes(3)){
             outcome='lose'
+        }else{
+            return false
         }
 
 //checks who won or lost
@@ -117,7 +114,7 @@ function instants(){
 //checks for a triple
 function triple(){
 
-    if(dice.d1==dice.d2===dice.d3){
+    if(dice.d1==dice.d2==dice.d3){
         if(bot.turn){
             bot.triple=dice.d1+dice.d2+dice.d3
         }
@@ -148,11 +145,11 @@ function triple(){
 function setPointCheck(){
     //converts the values in dice into an array
     let roll=Object.values(dice)
+    // extracts the number that doesn't repeat, retrieving the set point value
     let setPoint=roll.filter((value) => roll.indexOf(value) === roll.lastIndexOf(value));
 
     //checks if there even is a setpoint
     if(setPoint>0){
-
         //checks who gets the set point
         if(bot.turn){
             bot.setPoint=setPoint
@@ -171,7 +168,7 @@ function setPointCheck(){
                 game.pot=0
             }
         }
-    }
+    }//end of if statment
 }//end of setPointCheck function
 
 //controls the timer
@@ -192,8 +189,21 @@ function timer(){
         game.time.seconds+=59
         
     }
-    //clears the timer when it reaches zero
+    //stops the timer when it reaches zero
     if(game.time.minutes==0 && game.time.seconds==0){
         clearInterval(timeVar)
     }
+}
+
+function turnSwitch(){
+     //turn checker
+     if(bot.turn){
+        player.turn=true
+        bot.turn=false
+    }else{
+        bot.turn=true
+        player.turn=false
+    }
+    console.log(bot.turn)
+    console.log(player.turn)
 }
