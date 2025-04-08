@@ -35,7 +35,9 @@ roll()
 
 
 //starts the timer
-// timeVar=setInterval(timer,1000)
+// setTimeout(function(){
+//     timeVar=setInterval(timer,1000)
+// },3000)
 
 
 //this function rolls the dice and starts the game
@@ -173,7 +175,7 @@ function setPointCheck(){
 
 //controls the timer
 function timer(){
-    let timeDisplay=document.getElementById('timeDisplay')
+    let timeDisplay=document.getElementById('timer')
     //updates the time display
     timeDisplay.textContent=`${game.time.minutes}:${game.time.seconds}`
     game.time.seconds-=1
@@ -204,6 +206,4 @@ function turnSwitch(){
         bot.turn=true
         player.turn=false
     }
-    console.log(bot.turn)
-    console.log(player.turn)
 }
