@@ -26,15 +26,17 @@
 
         #timer{
             position: fixed;
-            font-size: 2.5em;
             left: 2%;
+            font-size: 3em;
         }
         .gameContain{
             grid-row: 2;
+            font-size: 2.5em;
             align-content: center;
             display: flex;
             justify-content: space-between;
             flex-direction: row;
+            transition: 1s;
         }
 
         #betBox{
@@ -42,11 +44,18 @@
             justify-content: center;
             align-content: center   ;
         }
+        #dieDisplay{
+            align-content: center;
+        }
+        #balanceDisplay{
+            align-content: center;
+        }
 
     </style>
 </head>
 <body>
     <h2 id="timer">5:00</h2>
+
     <div class="gameContain" id="ctrler">
         <div id="betBox">
             <label style="margin: 0 auto; height: fit-content; font-size: 2em;"      for="betInput">Bet</label>
@@ -58,8 +67,10 @@
             
         </div>
         <div id="balanceDisplay">
+            <h2 id="balanceTxt">ej  w doomo</h2>
         </div>
     </div>
+
     <div class="contain">
         <div class="textBoard" id="textDisplay">
             
@@ -71,36 +82,36 @@
 
 <script>
 
-    let preMessage=['contacting server','connection confirmed','retrieving session info','session info:','players: 2','session length: five minutes','asdadas','asd']
+    let preMessage=['contacting server','connection confirmed','retrieving session info','session info:','number of players: 2','session length: five minutes','available credit: 1000','asd']
 
     let sysTextDis=document.getElementById('textDisplay')
 
     let gameCtrl=document.getElementById('ctrler')
 
-    // gameCtrl.setAttribute('style','display:none')
+    gameCtrl.setAttribute('style','opacity: 0;')
 
 let i=0
-//    let mesInter=setInterval(function(){
-//     let CurrentH= new Date().getHours()
-//     let CurrentMin= new Date().getMinutes()
+   let mesInter=setInterval(function(){
+    let CurrentH= new Date().getHours()
+    let CurrentMin= new Date().getMinutes()
 
-//     let newMessage=document.createElement('p')
+    let newMessage=document.createElement('p')
 
-//     newMessage.innerText=`${CurrentH}:${CurrentMin} [system] ${preMessage[i]}`
+    newMessage.innerText=`${CurrentH}:${CurrentMin} [system] ${preMessage[i]}`
 
-//     if(sysTextDis.childElementCount==5){ 
-//         sysTextDis.removeChild(sysTextDis.children[0])   
-//         sysTextDis.appendChild(newMessage)
-//     }else{
-//         sysTextDis.appendChild(newMessage)
-//     }
+    if(sysTextDis.childElementCount==5){ 
+        sysTextDis.removeChild(sysTextDis.children[0])   
+        sysTextDis.appendChild(newMessage)
+    }else{
+        sysTextDis.appendChild(newMessage)
+    }
 
-//     i++
-//     if(i==preMessage.length){
-//         clearInterval(mesInter)
-//         gameCtrl.removeAttribute('style')
-//     }
+    i++
+    if(i==preMessage.length){
+        clearInterval(mesInter)
+        gameCtrl.removeAttribute('style')
+    }
 
-// },2500)
+},2500)
 </script>
 <script src="roll2.js"></script>

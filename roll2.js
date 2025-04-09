@@ -31,8 +31,9 @@ let game={
 player= players.player
 bot= players.bot
 
-roll()  
 
+
+updateDisplay()
 
 //starts the timer
 // setTimeout(function(){
@@ -43,14 +44,14 @@ roll()
 //this function rolls the dice and starts the game
 function roll(){
 
-    // let displayDice=document.getElementById('dice')
+    let displayDice=document.getElementById('dieDisplay')
     
     //segment 1: roll
     dice.d1=Math.floor(1+Math.random()*6)
     dice.d2=Math.floor(1+Math.random()*6)
     dice.d3=Math.floor(1+Math.random()*6)
 
-    // displayDice.textContent= `${dice.d1} ${dice.d2} ${dice.d3}`
+    displayDice.textContent= `${dice.d1} ${dice.d2} ${dice.d3}`
     //end of segment 1
     
     //checks for the instant win and instant lost
@@ -206,4 +207,38 @@ function turnSwitch(){
         bot.turn=true
         player.turn=false
     }
+}
+
+
+let betInput=document.getElementById('betInput')
+let betButton=document.getElementById('better')
+
+let TermText=document.getElementById('textDisplay')
+
+betButton.addEventListener('click',betPlace)
+
+function betPlace(){
+    let currentBet=parseInt(betInput.value)
+    if(player.turn){
+        if((player.points-currentBet)<0){
+            let denyMessage= document.createElement('p')
+            denyMessage.innerText='ERROR:insufficient funds'
+            if(TermText.childElementCount==5){
+                TermText.removeChild(sysTextDis.children[0])
+                TermText.appendChild(denyMessage)
+            }else{
+                TermText.appendChild(denyMessage)
+            }
+        }else{
+            console.log(typeof(player.points))
+            player.points=parseInt(player.points)-parseInt(currentBet)
+            updateDisplay()
+        }
+    }
+}
+
+function updateDisplay(){
+    let balanceDisplay=document.getElementById('balanceTxt')
+
+    balanceDisplay.innerText=`${player.points} points`
 }
