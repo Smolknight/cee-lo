@@ -4,13 +4,15 @@ let players={
         points:1000,
         turn:false,
         setPoint:0,
-        triple:0
+        triple:0,
+        bet:false
     },
     player:{
         points:1000,
         turn:true,
         setPoint:0,
-        triple:0
+        triple:0,
+        bet:false
     }
 }
 
@@ -31,21 +33,28 @@ let game={
 player= players.player
 bot= players.bot
 
+let currentDate=new Date
+let TermText=document.getElementById('textDisplay')
 
+    let displayDice=document.getElementById('dieDisplay')
+        displayDice.textContent= `${dice.d1} ${dice.d2} ${dice.d3}`
 
 updateDisplay()
 
-//starts the timer
-// setTimeout(function(){
-//     timeVar=setInterval(timer,1000)
-// },3000)
 
+setTimeout(function(){
+    timeVar=setInterval(timer,1000)
+},20000)
+
+let rollBtn=document.getElementById('rollBtn')
+rollBtn.addEventListener('click',roll)
 
 //this function rolls the dice and starts the game
 function roll(){
+    let betInput=document.getElementById('betInput')
+    let currentBet=parseInt(betInput.value)
 
-    let displayDice=document.getElementById('dieDisplay')
-    
+    if((player.bet && player.turn) || (bot.bet && bot.turn)){
     //segment 1: roll
     dice.d1=Math.floor(1+Math.random()*6)
     dice.d2=Math.floor(1+Math.random()*6)
@@ -54,6 +63,17 @@ function roll(){
     displayDice.textContent= `${dice.d1} ${dice.d2} ${dice.d3}`
     //end of segment 1
     
+    if(player.turn){
+        let consoleMessage=document.createElement('p')
+        consoleMessage.textContent=`${currentDate.getHours()}:${currentDate.getMinutes()} [system] anonymous rolled-${dice.d1} ${dice.d2} ${dice.d3}`
+        if(TermText.childElementCount==5){
+            TermText.removeChild(TermText.children[0])
+            TermText.appendChild(consoleMessage)
+        }else{
+            TermText.appendChild(consoleMessage)
+        }
+    }
+
     //checks for the instant win and instant lost
     instants()
 
@@ -65,6 +85,16 @@ function roll(){
 
    //calls the function that changes who turn it is
     turnSwitch()
+}else{
+    let betWarnTxt=document.createElement('p')
+    betWarnTxt.innerText=`${currentDate.getHours()}:${currentDate.getMinutes()} [system] ERROR: must place bet before roll`
+    if(TermText.childElementCount==5){
+        TermText.removeChild(TermText.children[0])
+        TermText.appendChild(betWarnTxt)
+    }else{
+        TermText.appendChild(betWarnTxt)
+    }
+}
 }//end of roll function
 
 
@@ -89,12 +119,14 @@ function instants(){
                 //awards points to the bot
                 bot.points+=game.pot
                 game.pot=0
+                resetBet()
                 break
             }
             else{
                 //awards points to the player
                 player.points+=game.pot
                 game.pot=0
+                resetBet()
                 break
             }
 
@@ -105,10 +137,12 @@ function instants(){
                 //awards points to other player
                 player.points+=game.pot
                 game.pot=0
+                resetBet()
                 break
             } else{
                 bot.points+=game.pot
                 game.pot=0
+                resetBet()
                 break
 }
 }//end of switch case
@@ -124,8 +158,6 @@ function triple(){
         else{
             player.triple=dice.d1+dice.d2+dice.d3
         }
-    }else{
-        return false
     }
 
     //checks if both players even have a triple
@@ -134,13 +166,17 @@ function triple(){
     if(bot.triple>player.triple){
         bot.points+=game.pot
         game.pot=0
+        bot.triple=0
+        player.triple=0
     }else{
         player.points+=game.pot
         game.pot=0
+        bot.triple=0
+        player.triple=0
     }
-    }else{
-        return false
-    }//end of if statement
+    resetBet()
+    }
+    updateDisplay()
 }//end of triple() function
 
 
@@ -162,16 +198,23 @@ function setPointCheck(){
 
         //checks if both players even have a set point
         if(bot.setPoint>0 && player.setPoint>0){
+            console.log('both have point')
             //checks who has the larger setPoint
             if(bot.setPoint>player.setPoint){
                 bot.points+=game.pot
                 game.pot=0
+                player.setPoint=0
+                bot.setPoint=0
             }else{
                 player.points+=game.pot
                 game.pot=0
+                player.setPoint=0
+                bot.setPoint=0
             }
+            resetBet()
         }
     }//end of if statment
+    updateDisplay()
 }//end of setPointCheck function
 
 //controls the timer
@@ -207,38 +250,89 @@ function turnSwitch(){
         bot.turn=true
         player.turn=false
     }
-}
 
+    if(bot.turn){
+        let botBet=Math.floor(1+Math.random()*(bot.points*0.5))
+    setTimeout(function(){
+            botBetPlace(botBet)
+    },500)
+
+    setTimeout(roll,1000)
+
+
+    console.log('player has bet '+player.bet)
+    console.log('bot has bet '+bot.bet)
+    console.log('')
+}
+}
 
 let betInput=document.getElementById('betInput')
 let betButton=document.getElementById('better')
 
-let TermText=document.getElementById('textDisplay')
+
 
 betButton.addEventListener('click',betPlace)
 
 function betPlace(){
     let currentBet=parseInt(betInput.value)
-    if(player.turn){
-        if((player.points-currentBet)<0){
-            let denyMessage= document.createElement('p')
-            denyMessage.innerText='ERROR:insufficient funds'
-            if(TermText.childElementCount==5){
-                TermText.removeChild(sysTextDis.children[0])
-                TermText.appendChild(denyMessage)
-            }else{
-                TermText.appendChild(denyMessage)
+    if(player.turn){ //checks if it is the player's turn
+
+        if(currentBet>0){ //checks if playerm is trying to bet negative numbers
+
+            if((player.points-currentBet)<0){ //checks if the player is betting more points than they have
+                //runs if the player doesn't have enough to cover the bet
+                let denyMessage= document.createElement('p')
+                denyMessage.innerText=`${currentDate.getHours()}:${currentDate.getMinutes()} [system] ERROR: not enough points`
+                if(TermText.childElementCount==5){
+                    TermText.removeChild(TermText.children[0])
+                    TermText.appendChild(denyMessage)
+                }else{
+                    TermText.appendChild(denyMessage)
+                }
+            }else{ //runs if the player has points to cover the bet
+                game.pot+=currentBet
+                player.points=parseInt(player.points)-parseInt(currentBet)
+                player.bet=true
+                updateDisplay()
             }
+        }else{ //runs if the player tries to send a negative number
+            let denyMessage= document.createElement('p')
+            denyMessage.innerText=`${currentDate.getHours()}:${currentDate.getMinutes()} [system] ERROR: can not bet negative points`
+            if(TermText.childElementCount==5){ //script used to prevent text overflow
+                TermText.removeChild(TermText.children[0])
+                TermText.appendChild(denyMessage)
         }else{
-            console.log(typeof(player.points))
-            player.points=parseInt(player.points)-parseInt(currentBet)
-            updateDisplay()
+            TermText.appendChild(denyMessage)
         }
     }
+}
+betInput.value=""
+currentBet=0
 }
 
 function updateDisplay(){
     let balanceDisplay=document.getElementById('balanceTxt')
+    let potDisplay=document.getElementById('pot')
 
     balanceDisplay.innerText=`${player.points} points`
+    potDisplay.innerText=`${game.pot} points`
+
+    console.log('player turn '+player.turn)
+    console.log('bot turn '+bot.turn)
+}
+
+function resetBet(){
+    if(player.bet && bot.bet){
+        player.bet=false
+        bot.bet=false
+    }
+}
+
+function botBetPlace(bet){
+    if(!bot.bet){
+        game.pot+=bet
+        bot.points-=bet
+        bot.bet=true
+    }
+    updateDisplay()
 }

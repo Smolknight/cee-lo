@@ -44,8 +44,11 @@
             justify-content: center;
             align-content: center   ;
         }
-        #dieDisplay{
+        #RollArea{
             align-content: center;
+            h2{
+                margin: 43px;
+            }
         }
         #balanceDisplay{
             align-content: center;
@@ -55,7 +58,7 @@
 </head>
 <body>
     <h2 id="timer">5:00</h2>
-
+    <h2 id="pot">0</h2>
     <div class="gameContain" id="ctrler">
         <div id="betBox">
             <label style="margin: 0 auto; height: fit-content; font-size: 2em;"      for="betInput">Bet</label>
@@ -63,11 +66,12 @@
             <br>
             <button id="better">Place bet</button>
         </div>
-        <div id="dieDisplay">
-            
+        <div id="RollArea">
+            <h2 id="dieDisplay"></h2>
+            <button style="width: 100%;" id="rollBtn">ROLL</button>
         </div>
         <div id="balanceDisplay">
-            <h2 id="balanceTxt">ej  w doomo</h2>
+            <h2 id="balanceTxt"></h2>
         </div>
     </div>
 
@@ -82,8 +86,8 @@
 
 <script>
 
-    let preMessage=['contacting server','connection confirmed','retrieving session info','session info:','number of players: 2','session length: five minutes','available credit: 1000','asd']
-
+    let preMessage=['contacting server','connection confirmed','retrieving session info','session info:','number of players: 2','session length: five minutes','available credit: 1000','game session start']
+    console.log(preMessage.length)
     let sysTextDis=document.getElementById('textDisplay')
 
     let gameCtrl=document.getElementById('ctrler')
