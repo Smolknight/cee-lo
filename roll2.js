@@ -1,7 +1,7 @@
 let players={
 
     bot:{
-        points:1000,
+        points:19999,
         turn:false,
         setPoint:0,
         triple:0,
@@ -254,7 +254,7 @@ function turnSwitch(){
     }
 
     if(bot.turn){
-        let botBet=Math.floor(1+Math.random()*(bot.points*0.9))
+        let botBet=Math.floor(1+Math.random()*(bot.points*0.6))
     setTimeout(function(){
             botBetPlace(botBet)
     },500)
