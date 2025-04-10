@@ -1,7 +1,7 @@
 let players={
 
     bot:{
-        points:19999,
+        points:13500,
         turn:false,
         setPoint:0,
         triple:0,
@@ -112,7 +112,7 @@ function instants(){
             else{
                 //awards points to the player
                 player.points+=game.pot
-                sendMsg(`Anonymous has rolled a 4-5-6, Shinigami has won ${game.pot} points`)
+                sendMsg(`Anonymous has rolled a 4-5-6, Anonymous has won ${game.pot} points`)
                 game.pot=0
                 resetBet()
                 break
