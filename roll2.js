@@ -254,7 +254,7 @@ function turnSwitch(){
     }
 
     if(bot.turn){
-        let botBet=Math.floor(1+Math.random()*(bot.points*0.5))
+        let botBet=Math.floor(1+Math.random()*(bot.points*0.9))
     setTimeout(function(){
             botBetPlace(botBet)
     },500)
