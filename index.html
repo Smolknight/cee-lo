@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cee-lo</title>
+    <style>
+        body{
+            background-color: black;
+            color: white;
+            overflow-y: hidden;
+        }
+        a:link{
+            text-decoration: none;
+        }
+        a:visited{
+            color: black;
+        }
+        button{
+            height: 7vh; 
+            width: 60%; 
+            font-size: 2em;
+        }
+        #contian{
+            width: 100%;
+            height: 95vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        #title{
+            grid-column: 2;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: column; 
+
+
+        }
+        #title h1{
+                font-size: 5em;
+                height: auto;
+                animation-name: fadeIn;
+                animation-duration: 2s;
+        }
+        h2{
+            animation-name: fadeIn;
+            animation-duration: 2s;
+        }
+        button{
+            animation-name: slideUp;
+            animation-duration: 6s;
+            transition: 0.3s;
+        }
+
+        button:hover{
+            transform: scale(1.2);
+            background-color: rgb(204, 204, 204);
+        }
+
+        @keyframes fadeIn{
+            from{
+                opacity: 0;
+            }
+            to{
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from{
+                transform: translateY(500px);
+            }
+            to{
+                transform: translateY(-1%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="contian">
+
+        <div id="title">
+            <div class="text">
+                <h1>CEE-LO</h1>
+                <h2 style="text-align: center;">non-banking edition</h2>
+            </div>
+
+            <button onclick="play()">Play</button>
+            <a href="https://www.netexl.com/howtoplay/cee-lo/" target="_blank"><button>How to play</a></button>
+            <button onclick="skipStory()">Skip Story</button>
+        </div>
+
+    </div>
+</body>
+</html>
+
+<script>
+    function play(){
+        window.location.href='story.html'
+    }
+    function skipStory(){
+        window.location.href='protoUi.html'
+    }
+</script>

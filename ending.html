@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: black;
+            color: green;
+        }
+        .dialog{
+            width: 100%;
+            height: 95vh;
+            display: flex;
+            align-items: center;
+        }
+
+        #story{
+            height: 5vh;
+            margin: 0 auto;
+            font-size: 2em;
+            width: auto;
+            text-align: center;
+        }
+
+        #fader{
+            animation-name: fader;
+            animation-duration: 1s;
+            animation-iteration-count: infinite;
+        }
+
+        button{
+            width: 40vw;
+            font-size: 3em;
+            background-color: black;
+            color: white;
+        }
+        button:hover{
+            color: red;
+            transition: 1s;
+        }
+
+        @keyframes fader{
+            0%{
+                opacity: 1;
+            }
+            50%{
+                opacity: 0.5;
+            }
+            100%{
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dialog">
+        
+            <p id="story"><span id="insertHere"></span><span id="fader">_</span></p>
+
+    </div>
+</body>
+</html>
+<script>
+    let Fatepoint=sessionStorage.getItem('point')
+    let storyArray=[`Sadly, you didn't make enough to pay rent or pay your loan. Now you spend the rest of your limited days out on the streets, constantly running from the yakuza`,`You made enough to pay off your loan but not enough to pay rent. You ended up getting a job at a convenience store, sadly you had to skip some meals to afford rent. At least the Yakuza won't be after you`,`You made enough money to pay off your loan and this month's rent. You still have some extra left to spend. You can continue your job search without being on the streets nor being hounded by the Yakuza`]
+    let text=document.getElementById('insertHere')
+
+    lol=setInterval(typer,45)
+
+let j=0
+function typer(){
+if(Fatepoint<1000){
+    let currentLine=storyArray[0]
+    let line=currentLine.split('')
+    text.innerHTML+=`${line[j]}`
+    j++
+    if(j==currentLine.length){
+        clearInterval(lol)
+    }
+}else if(Fatepoint>=1000){
+    let currentLine=storyArray[1]
+    let line=currentLine.split('')
+    text.innerHTML+=`${line[j]}`
+    j++
+    if(j==currentLine.length){
+        clearInterval(lol)
+    }
+}else if(Fatepoint>4000){
+
+}
+}
+</script>
