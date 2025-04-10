@@ -88,7 +88,13 @@ if(Fatepoint<1000){
         clearInterval(lol)
     }
 }else if(Fatepoint>4000){
-
+      let currentLine=storyArray[2]
+    let line=currentLine.split('')
+    text.innerHTML+=`${line[j]}`
+    j++
+    if(j==currentLine.length){
+        clearInterval(lol)
+    }
 }
 }
 </script>
