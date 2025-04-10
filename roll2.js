@@ -1,18 +1,21 @@
 let players={
-    
+
     bot:{
         points:1000,
         turn:false,
         setPoint:0,
-        triple:0
+        triple:0,
+        bet:false
     },
     player:{
         points:1000,
         turn:true,
         setPoint:0,
-        triple:0
+        triple:0,
+        bet:false
     }
 }
+
 
 let dice={
     d1:0,
@@ -31,19 +34,26 @@ let game={
 player= players.player
 bot= players.bot
 
+let currentDate=new Date
+let TermText=document.getElementById('textDisplay')
 
+let displayDice=document.getElementById('dieDisplay')
+        displayDice.textContent= `${dice.d1} ${dice.d2} ${dice.d3}`
 
 updateDisplay()
 
-//starts the timer
-// setTimeout(function(){
-//     timeVar=setInterval(timer,1000)
-// },3000)
+setTimeout(function(){
+    timeVar=setInterval(timer,1000)
+},22500)
+
+let rollBtn=document.getElementById('rollBtn')
+rollBtn.addEventListener('click',roll)
 
 
 //this function rolls the dice and starts the game
 function roll(){
 
+    if((player.bet && player.turn) || (bot.bet && bot.turn)){
     let displayDice=document.getElementById('dieDisplay')
     
     //segment 1: roll
@@ -52,6 +62,11 @@ function roll(){
     dice.d3=Math.floor(1+Math.random()*6)
 
     displayDice.textContent= `${dice.d1} ${dice.d2} ${dice.d3}`
+    if(player.turn){
+        sendMsg(`Anonymous rolled ${dice.d1}-${dice.d2}-${dice.d3}`)
+    }else{
+        sendMsg(`Shinigami rolled ${dice.d1}-${dice.d2}-${dice.d3}`)
+    }
     //end of segment 1
     
     //checks for the instant win and instant lost
@@ -65,6 +80,9 @@ function roll(){
 
    //calls the function that changes who turn it is
     turnSwitch()
+    }else{
+        sendMsg(`ERROR: must place bet before rolling`)
+    }
 }//end of roll function
 
 
@@ -78,8 +96,6 @@ function instants(){
             outcome='win'
         }else if(roll.includes(1) && roll.includes(2) && roll.includes(3)){
             outcome='lose'
-        }else{
-            return false
         }
 
 //checks who won or lost
@@ -88,13 +104,17 @@ function instants(){
             if(bot.turn){
                 //awards points to the bot
                 bot.points+=game.pot
+                sendMsg(`Shinigami has rolled a 4-5-6, Shinigami has won ${game.pot} points`)
                 game.pot=0
+                resetBet()
                 break
             }
             else{
                 //awards points to the player
                 player.points+=game.pot
+                sendMsg(`Anonymous has rolled a 4-5-6, Shinigami has won ${game.pot} points`)
                 game.pot=0
+                resetBet()
                 break
             }
 
@@ -104,14 +124,19 @@ function instants(){
             if(bot.turn){
                 //awards points to other player
                 player.points+=game.pot
+                sendMsg(`Shinigami has rolled a 1-2-3, Anonymous has won ${game.pot} points`)
                 game.pot=0
+                resetBet()
                 break
             } else{
                 bot.points+=game.pot
+                sendMsg(`Anonymous has rolled a 1-2-3, Shinigami has won ${game.pot} points`)
                 game.pot=0
+                resetBet()
                 break
 }
 }//end of switch case
+updateDisplay()
 }
 
 //checks for a triple
@@ -124,8 +149,6 @@ function triple(){
         else{
             player.triple=dice.d1+dice.d2+dice.d3
         }
-    }else{
-        return false
     }
 
     //checks if both players even have a triple
@@ -133,14 +156,21 @@ function triple(){
            //if both players gotten a triple, this if statement checks who has the larger value
     if(bot.triple>player.triple){
         bot.points+=game.pot
+        sendMsg(`Shinigami has the higher triple, Shinigami has won ${game.pot} points`)
         game.pot=0
+        player.triple=0
+        bot.triple=0
+        resetBet()
     }else{
         player.points+=game.pot
+        sendMsg(`Anonymous has the higher triple, Anonymous has won ${game.pot} points`)
         game.pot=0
+        player.triple=0
+        bot.triple=0
+        resetBet()
     }
-    }else{
-        return false
     }//end of if statement
+    updateDisplay()
 }//end of triple() function
 
 
@@ -165,13 +195,22 @@ function setPointCheck(){
             //checks who has the larger setPoint
             if(bot.setPoint>player.setPoint){
                 bot.points+=game.pot
+                sendMsg(`Shinigami had the higher set point, Shinigami won ${game.pot} points`)
                 game.pot=0
+                player.setPoint=0
+                bot.setPoint=0
+                resetBet()
             }else{
                 player.points+=game.pot
+                sendMsg(`Anonymous had the higher set point, Anonymous won ${game.pot} points`)
                 game.pot=0
+                player.setPoint=0
+                bot.setPoint=0
+                resetBet()
             }
         }
     }//end of if statment
+    updateDisplay()
 }//end of setPointCheck function
 
 //controls the timer
@@ -195,6 +234,8 @@ function timer(){
     //stops the timer when it reaches zero
     if(game.time.minutes==0 && game.time.seconds==0){
         clearInterval(timeVar)
+        sessionStorage.setItem(point,player.point)
+        console.log(sessionStorage.getItem(point))
     }
 }
 
@@ -207,38 +248,92 @@ function turnSwitch(){
         bot.turn=true
         player.turn=false
     }
+
+    if(bot.turn){
+        let botBet=Math.floor(1+Math.random()*(bot.points*0.5))
+    setTimeout(function(){
+            botBetPlace(botBet)
+    },500)
+
+    setTimeout(roll,1000)
 }
+}
+
+
+
+
 
 
 let betInput=document.getElementById('betInput')
 let betButton=document.getElementById('better')
 
-let TermText=document.getElementById('textDisplay')
-
 betButton.addEventListener('click',betPlace)
 
 function betPlace(){
     let currentBet=parseInt(betInput.value)
-    if(player.turn){
-        if((player.points-currentBet)<0){
-            let denyMessage= document.createElement('p')
-            denyMessage.innerText='ERROR:insufficient funds'
-            if(TermText.childElementCount==5){
-                TermText.removeChild(sysTextDis.children[0])
-                TermText.appendChild(denyMessage)
-            }else{
-                TermText.appendChild(denyMessage)
+
+    if(player.turn){ //checks if it is the player's turn
+
+        if(currentBet>0){ //checks if playerm is trying to bet negative numbers
+
+            if((player.points-currentBet)<0){ //checks if the player is betting more points than they have
+                //runs if the player doesn't have enough to cover the bet
+                sendMsg('ERROR: not enough points')
+            }else{ //runs if the player has points to cover the bet
+                game.pot+=currentBet
+                player.points=parseInt(player.points)-parseInt(currentBet)
+                player.bet=true
+                sendMsg(`Anonymous has bet ${currentBet} points`)
+                updateDisplay()
             }
-        }else{
-            console.log(typeof(player.points))
-            player.points=parseInt(player.points)-parseInt(currentBet)
-            updateDisplay()
+        }else{ //runs if the player tries to send a negative number
+            sendMsg('ERROR: can not bet negative points')
         }
     }
+
+    betInput.value=""
+    currentBet=0
 }
 
 function updateDisplay(){
     let balanceDisplay=document.getElementById('balanceTxt')
+    let potDisplay=document.getElementById('pot')
 
     balanceDisplay.innerText=`${player.points} points`
+    potDisplay.innerText=`${game.pot} points`
+}
+
+
+
+function resetBet(){
+    if(player.bet && bot.bet){
+        player.bet=false
+        bot.bet=false
+    }
+}
+
+
+function botBetPlace(bet){
+    if(!bot.bet){
+        game.pot+=bet
+        bot.points-=bet
+        sendMsg(`Shinigami has bet ${bet} points`)
+        bot.bet=true
+    }
+    updateDisplay()
+}
+
+function sendMsg(msg){
+    let outMsg= document.createElement('p')
+    if(currentDate.getMinutes()<10){
+    outMsg.innerText=`${currentDate.getHours()}:0${currentDate.getMinutes()} [system] ${msg}`
+    }else{
+    outMsg.innerText=`${currentDate.getHours()}:${currentDate.getMinutes()} [system] ${msg}`
+    }
+                if(TermText.childElementCount==5){
+                    TermText.removeChild(TermText.children[0])
+                    TermText.appendChild(outMsg)
+                }else{
+                    TermText.appendChild(outMsg)
+                }
 }

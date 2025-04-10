@@ -1,79 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        body{
-            background-color: black;
-            color: white;
-            display: grid;
-            grid-template-rows: 1 fr 1fr 1fr;
-            height: 95vh;
-        }
-        .contain{
-            height: 100%;
-            width: 100%;
-            grid-row: 3;
-            align-content: end;
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+     <style>
+         body{
+             background-color: black;
+             color: white;
+             display: grid;
+             grid-template-rows: 1 fr 1fr 1fr;
+             height: 95vh;
+         }
+         .contain{
+             height: 100%;
+             width: 100%;
+             grid-row: 3;
+             align-content: end;
+ 
+         }
+         .textBoard{
+             border: white 2px solid;
+             text-indent: 10px;
+         }
+ 
+         #timer{
+             position: fixed;
+             left: 2%;
+             font-size: 3em;
+         }
+         .gameContain{
+             grid-row: 2;
+             font-size: 2.5em;
+             align-content: center;
+             display: flex;
+             justify-content: space-between;
+             flex-direction: row;
+             transition: 1s;
+         }
+ 
+            #betBox{
+                display: grid;
+                justify-content: center;
+                align-content: center   ;
+            }
+            #RollArea{
+                align-content: center;
+                h2{
+                    margin: 43px;
+                }
+            }
+            #balanceDisplay{
+                align-content: center;
+            }
 
-        }
-        .textBoard{
-            border: white 2px solid;
-            text-indent: 10px;
-        }
-
-        #timer{
-            position: fixed;
-            left: 2%;
-            font-size: 3em;
-        }
-        .gameContain{
-            grid-row: 2;
-            font-size: 2.5em;
-            align-content: center;
-            display: flex;
-            justify-content: space-between;
-            flex-direction: row;
-            transition: 1s;
-        }
-
-        #betBox{
-            display: grid;
-            justify-content: center;
-            align-content: center   ;
-        }
-        #dieDisplay{
-            align-content: center;
-        }
-        #balanceDisplay{
-            align-content: center;
-        }
-
-    </style>
+</style>
 </head>
 <body>
     <h2 id="timer">5:00</h2>
 
+    <h2 id="pot">0</h2>
+
     <div class="gameContain" id="ctrler">
         <div id="betBox">
-            <label style="margin: 0 auto; height: fit-content; font-size: 2em;"      for="betInput">Bet</label>
+            <label style="margin: 0 auto; height: fit-content; font-size: 2em;" for="betInput">Bet</label>
             <input id="betInput" type="number">
             <br>
             <button id="better">Place bet</button>
         </div>
-        <div id="dieDisplay">
-            
+
+        <div id="RollArea">
+            <h2 id="dieDisplay"></h2>
+            <button style="width: 100%;" id="rollBtn">ROLL</button>
         </div>
+
         <div id="balanceDisplay">
-            <h2 id="balanceTxt">ej  w doomo</h2>
+            <h2 id="balanceTxt"></h2>
         </div>
     </div>
-
     <div class="contain">
         <div class="textBoard" id="textDisplay">
-            
+
         </div>
     </div>
 
@@ -81,37 +88,36 @@
 </html>
 
 <script>
-
-    let preMessage=['contacting server','connection confirmed','retrieving session info','session info:','number of players: 2','session length: five minutes','available credit: 1000','asd']
-
-    let sysTextDis=document.getElementById('textDisplay')
-
-    let gameCtrl=document.getElementById('ctrler')
-
-    gameCtrl.setAttribute('style','opacity: 0;')
-
-let i=0
-   let mesInter=setInterval(function(){
-    let CurrentH= new Date().getHours()
-    let CurrentMin= new Date().getMinutes()
-
-    let newMessage=document.createElement('p')
-
-    newMessage.innerText=`${CurrentH}:${CurrentMin} [system] ${preMessage[i]}`
-
-    if(sysTextDis.childElementCount==5){ 
-        sysTextDis.removeChild(sysTextDis.children[0])   
-        sysTextDis.appendChild(newMessage)
-    }else{
-        sysTextDis.appendChild(newMessage)
-    }
-
-    i++
-    if(i==preMessage.length){
+     let preMessage=['contacting server','connection confirmed','retrieving session info','session info:','number of players: 2','player list: Anonymous(you), Shinigami','session length: five minutes','available points: 1000','game session start']
+     console.log(preMessage.length)
+     let sysTextDis=document.getElementById('textDisplay')
+ 
+     let gameCtrl=document.getElementById('ctrler')
+ 
+     gameCtrl.setAttribute('style','opacity: 0;')
+ 
+ let i=0
+    let mesInter=setInterval(function(){
+     let CurrentH= new Date().getHours()
+     let CurrentMin= new Date().getMinutes()
+ 
+     let newMessage=document.createElement('p')
+ 
+     newMessage.innerText=`${CurrentH}:${CurrentMin} [system] ${preMessage[i]}`
+ 
+     if(sysTextDis.childElementCount==5){ 
+         sysTextDis.removeChild(sysTextDis.children[0])   
+         sysTextDis.appendChild(newMessage)
+     }else{
+         sysTextDis.appendChild(newMessage)
+     }
+ 
+     i++
+     if(i==preMessage.length){  
         clearInterval(mesInter)
         gameCtrl.removeAttribute('style')
     }
-
+ 
 },2500)
 </script>
 <script src="roll2.js"></script>
