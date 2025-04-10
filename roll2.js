@@ -44,7 +44,7 @@ updateDisplay()
 
 setTimeout(function(){
     timeVar=setInterval(timer,1000)
-},18000)
+},22500)
 
 let rollBtn=document.getElementById('rollBtn')
 rollBtn.addEventListener('click',roll)
